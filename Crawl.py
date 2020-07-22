@@ -1,12 +1,13 @@
 # -*-coding:utf-8-*-
 # @author:lijinxi
 
-import requests
-from bs4 import BeautifulSoup
-import time
 import os
+import time
+
 import pdfkit
+import requests
 import xlwt
+from bs4 import BeautifulSoup
 
 
 class Crawl:
@@ -67,9 +68,10 @@ class Crawl:
                     res = requests.get('https://static.liaoxuefeng.com' + sheet['href'], sheet['href'])
                     if sheet['href'] == '/static/css/main.css?v=1.0-b1b83dc-2019-05-25T01:51:58Z':
                         sheet['href'] = '/static/css/main.css'
-                    with open('.' + sheet['href'], 'w', encoding='utf-8') as f:
+                    file_path = '.' + sheet['href'].split('?')[0]
+                    with open(file_path, 'w', encoding='utf-8') as f:
                         f.write(res.text)
-                    sheet['href'] = '.' + sheet['href']
+                    sheet['href'] = file_path
                     self.css.append(sheet)
 
         # external js
@@ -146,6 +148,7 @@ class Crawl:
 
     def save_to_pdf(self):
         options = {
+            'enable-local-file-access': '',
             'page-size': 'Letter',
             'margin-top': '0.75in',
             'margin-right': '0.75in',
@@ -208,7 +211,7 @@ class Crawl:
 
 if __name__ == '__main__':
     # crawl = Crawl("https://www.liaoxuefeng.com/wiki/1016959663602400/1019418790329088", 'liaoxuefeng_python3.pdf')
-    # crawl = Crawl("https://www.liaoxuefeng.com/wiki/1252599548343744", 'liaoxuefeng_java12.pdf')
+    crawl = Crawl("https://www.liaoxuefeng.com/wiki/1252599548343744", 'liaoxuefeng_java14.pdf')
     # crawl = Crawl('https://www.liaoxuefeng.com/wiki/1022910821149312', 'liaoxuefeng_javascript.pdf')
-    crawl = Crawl('https://www.liaoxuefeng.com/wiki/1177760294764384', 'liaoxuefeng_sql.pdf')
+    # crawl = Crawl('https://www.liaoxuefeng.com/wiki/1177760294764384', 'liaoxuefeng_sql.pdf')
     # crawl=Crawl('https://www.liaoxuefeng.com/wiki/896043488029600','liaoxuefeng_git.pdf')
